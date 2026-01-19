@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recovery Journey App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="screen active">
+        <div class="login-container">
+            <div class="logo">🌟</div>
+            <h1>Recovery Journey</h1>
+            <p class="subtitle">Your privacy-first recovery companion</p>
+            
+            <form id="loginForm" class="auth-form">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Sign In</button>
+                <button type="button" id="showRegister" class="btn btn-link">Create Account</button>
+            </form>
+
+            <form id="registerForm" class="auth-form" style="display: none;">
+                <div class="form-group">
+                    <label for="regUsername">Username</label>
+                    <input type="text" id="regUsername" required>
+                </div>
+                <div class="form-group">
+                    <label for="regPassword">Password</label>
+                    <input type="password" id="regPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="regPasswordConfirm">Confirm Password</label>
+                    <input type="password" id="regPasswordConfirm" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Create Account</button>
+                <button type="button" id="showLogin" class="btn btn-link">Back to Sign In</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="appScreen" class="screen">
+        <!-- Navigation -->
+        <nav class="nav-bar">
+            <button class="nav-btn active" data-screen="dashboard">
+                <span>📊</span> Dashboard
+            </button>
+            <button class="nav-btn" data-screen="victory">
+                <span>🎉</span> Victory
+            </button>
+            <button class="nav-btn" data-screen="checkin">
+                <span>📝</span> Check-In
+            </button>
+            <button class="nav-btn" data-screen="values">
+                <span>❤️</span> Values
+            </button>
+            <button class="nav-btn" data-screen="emergency">
+                <span>🆘</span> Support
+            </button>
+        </nav>
+
+        <!-- Dashboard Screen -->
+        <div id="dashboard" class="content-screen active">
+            <div class="header">
+                <h1>Welcome Back! 💪</h1>
+                <button id="logoutBtn" class="btn-icon">🚪</button>
+            </div>
+            
+            <div class="streak-card">
+                <div class="streak-number" id="streakCount">0</div>
+                <div class="streak-label">Day Streak</div>
+                <div class="streak-emoji">🔥</div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalVictories">0</div>
+                    <div class="stat-label">Total Victories</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="weekVictories">0</div>
+                    <div class="stat-label">This Week</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="milestoneBadge">🌱</div>
+                    <div class="stat-label">Milestone</div>
+                </div>
+            </div>
+
+            <div class="quote-card">
+                <p class="quote-text" id="dailyQuote">"Recovery is not a race. It's a journey taken one day at a time."</p>
+            </div>
+
+            <div class="quick-actions">
+                <button class="action-btn" onclick="showScreen('checkin')">
+                    <span>📝</span> Daily Check-In
+                </button>
+                <button class="action-btn" onclick="showScreen('victory')">
+                    <span>🎉</span> Log Victory
+                </button>
+                <button class="action-btn emergency" onclick="showScreen('emergency')">
+                    <span>🆘</span> Emergency Support
+                </button>
+            </div>
+        </div>
+
+        <!-- Victory Log Screen -->
+        <div id="victory" class="content-screen">
+            <div class="header">
+                <h1>Victory Log 🎉</h1>
+                <button onclick="showScreen('dashboard')" class="btn-icon">←</button>
+            </div>
+
+            <div class="add-victory-form">
+                <textarea id="victoryNotes" placeholder="What victory do you want to log today?"></textarea>
+                <button class="btn btn-primary" onclick="logVictory()">Log Victory</button>
+            </div>
+
+            <div class="victory-list" id="victoryList">
+                <p class="empty-state">No victories logged yet. Log your first victory above!</p>
+            </div>
+
+            <div class="progress-chart">
+                <h3>Monthly Progress</h3>
+                <div id="chartContainer"></div>
+            </div>
+        </div>
+
+        <!-- Check-In Screen -->
+        <div id="checkin" class="content-screen">
+            <div class="header">
+                <h1>Daily Check-In 📝</h1>
+                <button onclick="showScreen('dashboard')" class="btn-icon">←</button>
+            </div>
+
+            <div class="checkin-form">
+                <div class="form-group">
+                    <label>How are you feeling today?</label>
+                    <div class="mood-buttons">
+                        <button class="mood-btn" data-mood="great" onclick="selectMood('great')">😊 Great</button>
+                        <button class="mood-btn" data-mood="good" onclick="selectMood('good')">🙂 Good</button>
+                        <button class="mood-btn" data-mood="okay" onclick="selectMood('okay')">😐 Okay</button>
+                        <button class="mood-btn" data-mood="difficult" onclick="selectMood('difficult')">😔 Difficult</button>
+                        <button class="mood-btn" data-mood="very-difficult" onclick="selectMood('very-difficult')">😢 Very Difficult</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Any triggers today? (Optional)</label>
+                    <div class="trigger-tags">
+                        <button class="tag-btn" onclick="toggleTrigger('stress')">Stress</button>
+                        <button class="tag-btn" onclick="toggleTrigger('loneliness')">Loneliness</button>
+                        <button class="tag-btn" onclick="toggleTrigger('anxiety')">Anxiety</button>
+                        <button class="tag-btn" onclick="toggleTrigger('boredom')">Boredom</button>
+                        <button class="tag-btn" onclick="toggleTrigger('frustration')">Frustration</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Notes (Optional)</label>
+                    <textarea id="checkinNotes" placeholder="How are you doing? What's on your mind?"></textarea>
+                </div>
+
+                <button class="btn btn-primary" onclick="submitCheckin()">Complete Check-In</button>
+            </div>
+
+            <div class="checkin-history">
+                <h3>Recent Check-Ins</h3>
+                <div id="checkinHistory"></div>
+            </div>
+        </div>
+
+        <!-- Values Screen -->
+        <div id="values" class="content-screen">
+            <div class="header">
+                <h1>Core Values ❤️</h1>
+                <button onclick="showScreen('dashboard')" class="btn-icon">←</button>
+            </div>
+
+            <div class="values-form">
+                <p class="help-text">What are the 5 most important things to you?</p>
+                <div class="form-group">
+                    <input type="text" id="value1" placeholder="Value 1">
+                    <input type="text" id="value2" placeholder="Value 2">
+                    <input type="text" id="value3" placeholder="Value 3">
+                    <input type="text" id="value4" placeholder="Value 4">
+                    <input type="text" id="value5" placeholder="Value 5">
+                </div>
+                <button class="btn btn-primary" onclick="saveValues()">Save Values</button>
+            </div>
+
+            <div class="values-display" id="valuesDisplay">
+                <p class="empty-state">Add your core values above</p>
+            </div>
+        </div>
+
+        <!-- Emergency Support Screen -->
+        <div id="emergency" class="content-screen">
+            <div class="header">
+                <h1>Emergency Support 🆘</h1>
+                <button onclick="showScreen('dashboard')" class="btn-icon">←</button>
+            </div>
+
+            <div class="emergency-section">
+                <h2>24/7 Crisis Hotlines</h2>
+                <div class="hotline-buttons">
+                    <a href="tel:988" class="emergency-btn">
+                        <span>📞</span>
+                        <div>
+                            <strong>988</strong>
+                            <small>Suicide Prevention Lifeline</small>
+                        </div>
+                    </a>
+                    <a href="tel:1-800-662-4357" class="emergency-btn">
+                        <span>📞</span>
+                        <div>
+                            <strong>1-800-662-4357</strong>
+                            <small>SAMHSA National Helpline</small>
+                        </div>
+                    </a>
+                    <a href="sms:741741?body=HOME" class="emergency-btn">
+                        <span>💬</span>
+                        <div>
+                            <strong>Text HOME to 741741</strong>
+                            <small>Crisis Text Line</small>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="coping-section">
+                <h2>Quick Coping Strategies</h2>
+                <div class="coping-cards">
+                    <div class="coping-card">
+                        <h3>🧘 Breathing Exercise</h3>
+                        <p>Breathe in for 4 counts, hold for 4, exhale for 4. Repeat.</p>
+                        <button class="btn btn-small" onclick="startBreathing()">Start Exercise</button>
+                    </div>
+                    <div class="coping-card">
+                        <h3>🌍 Grounding Technique</h3>
+                        <p>Name 5 things you see, 4 you can touch, 3 you hear, 2 you smell, 1 you taste.</p>
+                    </div>
+                    <div class="coping-card">
+                        <h3>🏃 Physical Activity</h3>
+                        <p>Take a 10-minute walk, do jumping jacks, or stretch.</p>
+                    </div>
+                    <div class="coping-card">
+                        <h3>📝 Journal</h3>
+                        <p>Write down what you're feeling. Get it out of your head.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="breathingExercise" class="breathing-modal" style="display: none;">
+                <div class="breathing-circle" id="breathingCircle"></div>
+                <p id="breathingText">Breathe In</p>
+                <button class="btn" onclick="stopBreathing()">Stop</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
