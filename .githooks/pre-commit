@@ -1,0 +1,50 @@
+#!/bin/bash
+
+# Pre-commit hook for security checks and GPG signing
+
+set -e
+
+echo "🔒 Running security pre-commit checks..."
+
+# Check if GPG is configured
+if ! command -v gpg &> /dev/null; then
+    echo "⚠️  Warning: GPG not found. Commits will not be signed."
+else
+    # Check if GPG key is available
+    if ! gpg --list-secret-keys --keyid-format LONG | grep -q sec; then
+        echo "⚠️  Warning: No GPG keys found. Configure GPG for signed commits."
+    fi
+fi
+
+# Run Flutter analyzer
+echo "Running Flutter analyzer..."
+flutter analyze --fatal-infos || {
+    echo "❌ Flutter analyzer found issues. Please fix them before committing."
+    exit 1
+}
+
+# Check for hardcoded secrets
+echo "Checking for hardcoded secrets..."
+if grep -r -E "(password|secret|api_key|private_key|token)\s*=\s*['\"][^'\"]+['\"]" lib/ --exclude-dir=generated; then
+    echo "❌ Potential hardcoded secrets found. Please use secure storage."
+    exit 1
+fi
+
+# Check for TODO/FIXME in security-critical code
+echo "Checking for TODOs in security code..."
+if grep -r -i "TODO\|FIXME" lib/security/; then
+    echo "⚠️  Warning: TODOs/FIXMEs found in security code. Review before committing."
+fi
+
+# Run security linter if available
+if command -v dart &> /dev/null; then
+    echo "Running security audit..."
+    dart pub audit || echo "⚠️  Security audit found issues. Review dependencies."
+fi
+
+echo "✅ Pre-commit checks passed!"
+
+# Note: GPG signing should be configured in git config
+# git config commit.gpgsign true
+
+exit 0

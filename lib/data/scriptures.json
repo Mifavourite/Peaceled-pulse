@@ -1,0 +1,187 @@
+{
+  "responses": [
+    {
+      "keywords": ["tempted", "temptation", "tempting", "struggling", "weak"],
+      "response": "Remember why you started. You can do all things through Christ who strengthens you.",
+      "scripture": {
+        "reference": "Philippians 4:13",
+        "text": "I can do all things through Christ who strengthens me."
+      }
+    },
+    {
+      "keywords": ["failed", "failure", "sinned", "mistake", "wrong", "fell"],
+      "response": "Grace is new every morning. His mercies never fail.",
+      "scripture": {
+        "reference": "Lamentations 3:22-23",
+        "text": "The steadfast love of the Lord never ceases; his mercies never come to an end; they are new every morning; great is your faithfulness."
+      }
+    },
+    {
+      "keywords": ["stressed", "anxious", "worried", "anxiety", "stress", "overwhelmed"],
+      "response": "Cast your cares on Him. He cares for you.",
+      "scripture": {
+        "reference": "1 Peter 5:7",
+        "text": "Cast all your anxiety on him because he cares for you."
+      }
+    },
+    {
+      "keywords": ["lonely", "alone", "isolated", "no one"],
+      "response": "You are never alone. God is with you always.",
+      "scripture": {
+        "reference": "Deuteronomy 31:6",
+        "text": "Be strong and courageous. Do not be afraid or terrified because of them, for the Lord your God goes with you; he will never leave you nor forsake you."
+      }
+    },
+    {
+      "keywords": ["afraid", "fear", "scared", "frightened", "terrified"],
+      "response": "Do not fear, for I am with you. Be strong and courageous.",
+      "scripture": {
+        "reference": "Joshua 1:9",
+        "text": "Have I not commanded you? Be strong and courageous. Do not be afraid; do not be discouraged, for the Lord your God will be with you wherever you go."
+      }
+    },
+    {
+      "keywords": ["tired", "exhausted", "weary", "drained", "burned out"],
+      "response": "Come to me, all who are weary, and I will give you rest.",
+      "scripture": {
+        "reference": "Matthew 11:28",
+        "text": "Come to me, all you who are weary and burdened, and I will give you rest."
+      }
+    },
+    {
+      "keywords": ["angry", "mad", "furious", "rage", "irritated"],
+      "response": "Be slow to anger. A gentle answer turns away wrath.",
+      "scripture": {
+        "reference": "Proverbs 15:1",
+        "text": "A gentle answer turns away wrath, but a harsh word stirs up anger."
+      }
+    },
+    {
+      "keywords": ["sad", "depressed", "down", "hopeless", "despair"],
+      "response": "The Lord is close to the brokenhearted. There is hope in Him.",
+      "scripture": {
+        "reference": "Psalm 34:18",
+        "text": "The Lord is close to the brokenhearted and saves those who are crushed in spirit."
+      }
+    },
+    {
+      "keywords": ["doubt", "uncertain", "unsure", "questioning", "confused"],
+      "response": "Trust in the Lord with all your heart. Lean not on your own understanding.",
+      "scripture": {
+        "reference": "Proverbs 3:5-6",
+        "text": "Trust in the Lord with all your heart and lean not on your own understanding; in all your ways submit to him, and he will make your paths straight."
+      }
+    },
+    {
+      "keywords": ["grateful", "thankful", "blessed", "appreciate"],
+      "response": "Give thanks in all circumstances. This is God's will for you.",
+      "scripture": {
+        "reference": "1 Thessalonians 5:18",
+        "text": "Give thanks in all circumstances; for this is God's will for you in Christ Jesus."
+      }
+    },
+    {
+      "keywords": ["peace", "calm", "serenity", "tranquil"],
+      "response": "The peace of God, which transcends all understanding, will guard your heart.",
+      "scripture": {
+        "reference": "Philippians 4:7",
+        "text": "And the peace of God, which transcends all understanding, will guard your hearts and your minds in Christ Jesus."
+      }
+    },
+    {
+      "keywords": ["strength", "strong", "power", "endurance"],
+      "response": "Those who hope in the Lord will renew their strength.",
+      "scripture": {
+        "reference": "Isaiah 40:31",
+        "text": "But those who hope in the Lord will renew their strength. They will soar on wings like eagles; they will run and not grow weary, they will walk and not be faint."
+      }
+    },
+    {
+      "keywords": ["love", "loved", "caring", "compassion"],
+      "response": "God's love for you is unfailing and everlasting.",
+      "scripture": {
+        "reference": "Jeremiah 31:3",
+        "text": "I have loved you with an everlasting love; I have drawn you with unfailing kindness."
+      }
+    },
+    {
+      "keywords": ["forgiveness", "forgive", "forgiven", "pardon"],
+      "response": "If we confess our sins, He is faithful and just to forgive us.",
+      "scripture": {
+        "reference": "1 John 1:9",
+        "text": "If we confess our sins, he is faithful and just and will forgive us our sins and purify us from all unrighteousness."
+      }
+    },
+    {
+      "keywords": ["hope", "hopeful", "future", "tomorrow"],
+      "response": "For I know the plans I have for you, plans to prosper you and not to harm you.",
+      "scripture": {
+        "reference": "Jeremiah 29:11",
+        "text": "For I know the plans I have for you, declares the Lord, plans to prosper you and not to harm you, plans to give you hope and a future."
+      }
+    },
+    {
+      "keywords": ["purpose", "meaning", "calling", "destiny"],
+      "response": "You were created for a purpose. God has a plan for your life.",
+      "scripture": {
+        "reference": "Ephesians 2:10",
+        "text": "For we are God's handiwork, created in Christ Jesus to do good works, which God prepared in advance for us to do."
+      }
+    },
+    {
+      "keywords": ["victory", "win", "success", "overcome", "conquer"],
+      "response": "In all these things we are more than conquerors through Him who loved us.",
+      "scripture": {
+        "reference": "Romans 8:37",
+        "text": "No, in all these things we are more than conquerors through him who loved us."
+      }
+    },
+    {
+      "keywords": ["patience", "wait", "waiting", "patient"],
+      "response": "Wait for the Lord; be strong and take heart and wait for the Lord.",
+      "scripture": {
+        "reference": "Psalm 27:14",
+        "text": "Wait for the Lord; be strong and take heart and wait for the Lord."
+      }
+    },
+    {
+      "keywords": ["wisdom", "wise", "understanding", "insight"],
+      "response": "If any of you lacks wisdom, you should ask God, who gives generously.",
+      "scripture": {
+        "reference": "James 1:5",
+        "text": "If any of you lacks wisdom, you should ask God, who gives generously to all without finding fault, and it will be given to you."
+      }
+    },
+    {
+      "keywords": ["help", "need", "support", "assistance"],
+      "response": "God is our refuge and strength, an ever-present help in trouble.",
+      "scripture": {
+        "reference": "Psalm 46:1",
+        "text": "God is our refuge and strength, an ever-present help in trouble."
+      }
+    }
+  ],
+  "default_responses": [
+    {
+      "response": "I'm here to support you. Can you tell me more about what you're going through?",
+      "scripture": {
+        "reference": "Psalm 46:1",
+        "text": "God is our refuge and strength, an ever-present help in trouble."
+      }
+    },
+    {
+      "response": "Remember that you're not alone in this journey. God is with you every step of the way.",
+      "scripture": {
+        "reference": "Isaiah 41:10",
+        "text": "So do not fear, for I am with you; do not be dismayed, for I am your God. I will strengthen you and help you; I will uphold you with my righteous right hand."
+      }
+    },
+    {
+      "response": "Take a moment to breathe. God's grace is sufficient for you.",
+      "scripture": {
+        "reference": "2 Corinthians 12:9",
+        "text": "But he said to me, 'My grace is sufficient for you, for my power is made perfect in weakness.'"
+      }
+    }
+  ]
+}
