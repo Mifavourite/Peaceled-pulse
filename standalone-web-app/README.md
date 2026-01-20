@@ -2,9 +2,37 @@
 
 This is a **fully functional standalone web version** of the Recovery Journey app that runs directly in Chrome without needing Flutter installed!
 
-## 🚀 Quick Start
+## ⚠️ IMPORTANT: How to Actually Use This
 
-1. **Open the app**: Simply double-click `index.html` or drag it into Chrome
+**GitHub does NOT run HTML files!** You cannot click on this file on GitHub and have it work.
+
+### ✅ To Use This App:
+
+**Option 1: Download and Open Locally (Recommended)**
+1. Click the green **"Code"** button above
+2. Select **"Download ZIP"**
+3. Extract the ZIP file
+4. Open the `standalone-web-app` folder
+5. **Double-click `index.html`** - it will open in Chrome!
+6. Create an account and start using!
+
+**Option 2: Clone Repository**
+```bash
+git clone https://github.com/Mifavourite/Peaceled-pulse.git
+cd Peaceled-pulse/standalone-web-app
+# Open index.html in Chrome
+```
+
+**Option 3: Use Raw File URLs**
+- Download all 3 files (`index.html`, `styles.css`, `app.js`) from this folder
+- Save them in the same folder on your computer
+- Open `index.html` in Chrome
+
+**📖 See `HOW_TO_USE.md` for detailed instructions!**
+
+## 🚀 Quick Start (After Downloading)
+
+1. **Open the app**: Double-click `index.html` (it opens in Chrome automatically)
 2. **Create an account**: Click "Create Account" and enter your details
 3. **Start using**: All features work immediately!
 
