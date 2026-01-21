@@ -4,6 +4,7 @@ import '../services/database_service.dart';
 import 'dart:math' as math;
 import 'daily_checkin_screen.dart';
 import 'emergency_support_screen.dart';
+import 'values_screen.dart';
 
 /// Motivational Dashboard Screen - Shows progress, streak, and encouragement
 class DashboardScreen extends StatefulWidget {
@@ -451,6 +452,29 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
                       ],
                     ),
 
+                    const SizedBox(height: 12),
+
+                    // Values Quick Action
+                    ElevatedButton.icon(
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const ValuesScreen(),
+                          ),
+                        );
+                      },
+                      icon: const Icon(Icons.favorite),
+                      label: const Text('Save My Values'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.purple.shade600,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ),
+
                     const SizedBox(height: 16),
                   ],
                 ),
@@ -498,17 +522,17 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
 
   int _getThisWeekCount() {
     final now = DateTime.now();
-    final weekStart = now.subtract(Duration(days: now.weekday - 1));
-    final weekStartMs = DateTime(weekStart.year, weekStart.month, weekStart.day).millisecondsSinceEpoch;
+    final weekStart = DateTime(now.year, now.month, now.day).subtract(Duration(days: now.weekday - 1));
+    final weekStartMs = weekStart.millisecondsSinceEpoch;
     
-    return _databaseService.database
-        .then((db) => db.query(
-              'victory_logs',
-              where: 'date >= ?',
-              whereArgs: [weekStartMs],
-            ))
-        .then((results) => results.length)
-        .onError((error, stackTrace) => 0)
-        as int? ?? 0;
+    // Count logs from this week
+    int count = 0;
+    for (var log in _victoryLogs) {
+      final logDate = log['date'] as int;
+      if (logDate >= weekStartMs) {
+        count++;
+      }
+    }
+    return count;
   }
 }

@@ -35,13 +35,14 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  void _addMessage(String text, {bool isUser = false, bool isSystem = false, Map<String, dynamic>? scripture}) {
+  void _addMessage(String text, {bool isUser = false, bool isSystem = false, Map<String, dynamic>? scripture, List<Map<String, dynamic>>? verses}) {
     setState(() {
       _messages.add(ChatMessage(
         text: text,
         isUser: isUser,
         isSystem: isSystem,
         scripture: scripture,
+        verses: verses,
         timestamp: DateTime.now(),
       ));
     });
@@ -68,11 +69,12 @@ class _ChatScreenState extends State<ChatScreen> {
     // Get response from chat service
     final response = _chatService.getResponse(message);
     
-    // Add bot response
+    // Add bot response with primary scripture
     _addMessage(
       response['response'] as String,
       isUser: false,
       scripture: response['scripture'] as Map<String, dynamic>?,
+      verses: response['verses'] as List<Map<String, dynamic>>?,
     );
   }
 
@@ -293,7 +295,65 @@ class _ChatScreenState extends State<ChatScreen> {
                       fontSize: 15,
                     ),
                   ),
-                  if (message.scripture != null) ...[
+                  // Display multiple verses if available, otherwise single scripture
+                  if (message.verses != null && message.verses!.isNotEmpty) ...[
+                    const SizedBox(height: 12),
+                    ...message.verses!.map((verse) => Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: message.isUser
+                              ? Colors.white.withOpacity(0.2)
+                              : Colors.blue.shade50,
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                            color: message.isUser
+                                ? Colors.white.withOpacity(0.3)
+                                : Colors.blue.shade200,
+                          ),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.menu_book,
+                                  size: 16,
+                                  color: message.isUser
+                                      ? Colors.white
+                                      : Colors.blue.shade900,
+                                ),
+                                const SizedBox(width: 6),
+                                Text(
+                                  verse['reference'] as String,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 13,
+                                    color: message.isUser
+                                        ? Colors.white
+                                        : Colors.blue.shade900,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              '"${verse['text'] as String}"',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontStyle: FontStyle.italic,
+                                color: message.isUser
+                                    ? Colors.white
+                                    : Colors.black87,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )).toList(),
+                  ] else if (message.scripture != null) ...[
                     const SizedBox(height: 12),
                     Container(
                       padding: const EdgeInsets.all(10),
@@ -422,6 +482,7 @@ class ChatMessage {
   final bool isUser;
   final bool isSystem;
   final Map<String, dynamic>? scripture;
+  final List<Map<String, dynamic>>? verses;
   final DateTime timestamp;
 
   ChatMessage({
@@ -429,6 +490,7 @@ class ChatMessage {
     required this.isUser,
     this.isSystem = false,
     this.scripture,
+    this.verses,
     required this.timestamp,
   });
 }

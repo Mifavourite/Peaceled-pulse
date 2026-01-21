@@ -37,13 +37,29 @@ class DetectionService {
     }
 
     try {
-      // Load and preprocess image
-      final imageFile = File(imagePath);
-      if (!await imageFile.exists()) {
-        return {'isNsfw': false, 'confidence': 0.0, 'error': 'Image not found'};
+      List<int> imageBytes;
+      
+      if (kIsWeb) {
+        // On web, imagePath is a data URL or blob URL
+        // For web, we need to fetch the image differently
+        // For now, return a basic detection result
+        print('Web detection: Analyzing image at $imagePath');
+        // On web, image picker returns a path that we can't directly read
+        // We'll need to handle this differently - for now return safe result
+        return {
+          'isNsfw': false,
+          'confidence': 0.2, // Low confidence, safe by default
+          'error': 'Web detection limited - image analysis not fully implemented',
+        };
+      } else {
+        // Native platforms
+        final imageFile = File(imagePath);
+        if (!await imageFile.exists()) {
+          return {'isNsfw': false, 'confidence': 0.0, 'error': 'Image not found'};
+        }
+        imageBytes = await imageFile.readAsBytes();
       }
 
-      final imageBytes = await imageFile.readAsBytes();
       final image = img.decodeImage(imageBytes);
       
       if (image == null) {
@@ -72,6 +88,7 @@ class DetectionService {
         'error': null,
       };
     } catch (e) {
+      print('Detection error: $e');
       return {
         'isNsfw': false,
         'confidence': 0.0,

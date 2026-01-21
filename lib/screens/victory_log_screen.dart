@@ -192,13 +192,26 @@ class _VictoryLogScreenState extends State<VictoryLogScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const Text(
-                    'Victory Log',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textAlign: TextAlign.center,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Expanded(
+                        child: Text(
+                          'Victory Log',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      if (_victoryLogs.isNotEmpty)
+                        IconButton(
+                          icon: const Icon(Icons.delete_outline, color: Colors.red),
+                          onPressed: _confirmDeleteAll,
+                          tooltip: 'Delete all logs',
+                        ),
+                    ],
                   ),
                   const SizedBox(height: 8),
                   const Text(
@@ -410,6 +423,57 @@ class _VictoryLogScreenState extends State<VictoryLogScreen> {
         ],
       ),
     );
+  }
+
+  Future<void> _confirmDeleteAll() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete All Victory Logs'),
+        content: const Text(
+          'Are you sure you want to delete all victory logs? This action cannot be undone. This will give you a fresh start.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: const Text('Delete All'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      await _deleteAllLogs();
+    }
+  }
+
+  Future<void> _deleteAllLogs() async {
+    try {
+      final userId = await _authService.getCurrentUserId();
+      if (userId != null) {
+        await _databaseService.clearVictoryLogs(userId);
+        await _loadVictoryLogs();
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('All victory logs deleted. Fresh start!'),
+              backgroundColor: Colors.green,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error deleting logs: $e')),
+        );
+      }
+    }
   }
 
   String _formatDate(DateTime date) {

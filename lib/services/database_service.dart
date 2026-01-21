@@ -419,6 +419,28 @@ class DatabaseService {
   /// Add victory log entry
   Future<int?> addVictoryLog(int userId, DateTime date, {String? notes}) async {
     try {
+      if (kIsWeb && _webStorage != null) {
+        // Web storage implementation
+        final logsKey = 'victory_logs_$userId';
+        final logsJson = _webStorage!.getString(logsKey) ?? '[]';
+        final logs = jsonDecode(logsJson) as List;
+        
+        final now = DateTime.now().millisecondsSinceEpoch;
+        final dateMs = date.millisecondsSinceEpoch;
+        final newId = logs.isEmpty ? 1 : (logs.map((l) => l['id'] as int).reduce((a, b) => a > b ? a : b) + 1);
+        
+        logs.add({
+          'id': newId,
+          'user_id': userId,
+          'date': dateMs,
+          'notes': notes ?? '',
+          'created_at': now,
+        });
+        
+        await _webStorage!.setString(logsKey, jsonEncode(logs));
+        return newId;
+      }
+      
       final db = database;
       final now = DateTime.now().millisecondsSinceEpoch;
       final dateMs = date.millisecondsSinceEpoch;
@@ -435,6 +457,7 @@ class DatabaseService {
       
       return id;
     } catch (e) {
+      print('Error adding victory log: $e');
       return null;
     }
   }
@@ -442,6 +465,19 @@ class DatabaseService {
   /// Get victory logs
   Future<List<Map<String, dynamic>>> getVictoryLogs(int userId) async {
     try {
+      if (kIsWeb && _webStorage != null) {
+        // Web storage implementation
+        final logsKey = 'victory_logs_$userId';
+        final logsJson = _webStorage!.getString(logsKey) ?? '[]';
+        final logs = jsonDecode(logsJson) as List;
+        
+        // Convert to Map and sort by date DESC
+        final logsList = logs.map((l) => Map<String, dynamic>.from(l)).toList();
+        logsList.sort((a, b) => (b['date'] as int).compareTo(a['date'] as int));
+        
+        return logsList;
+      }
+      
       final db = database;
       final results = await db.query(
         'victory_logs',
@@ -451,7 +487,31 @@ class DatabaseService {
       );
       return results;
     } catch (e) {
+      print('Error getting victory logs: $e');
       return [];
+    }
+  }
+
+  /// Clear all victory logs for user
+  Future<bool> clearVictoryLogs(int userId) async {
+    try {
+      if (kIsWeb && _webStorage != null) {
+        // Web storage implementation
+        final logsKey = 'victory_logs_$userId';
+        await _webStorage!.remove(logsKey);
+        return true;
+      }
+      
+      final db = database;
+      final count = await db.delete(
+        'victory_logs',
+        where: 'user_id = ?',
+        whereArgs: [userId],
+      );
+      return count > 0;
+    } catch (e) {
+      print('Error clearing victory logs: $e');
+      return false;
     }
   }
 

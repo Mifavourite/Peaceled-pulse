@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:image_picker/image_picker.dart';
 import 'package:camera/camera.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -300,7 +301,15 @@ class _DetectionScreenState extends State<DetectionScreen> {
       final pickedFile = await _imagePicker.pickImage(source: source);
       if (pickedFile != null) {
         setState(() {
-          _selectedImage = File(pickedFile.path);
+          // On web, path might be a data URL, handle both cases
+          if (kIsWeb) {
+            // For web, we store the path as-is (it's a blob URL or data URL)
+            _selectedImage = null; // Don't use File on web
+            _selectedImagePath = pickedFile.path; // Store path for web
+          } else {
+            _selectedImage = File(pickedFile.path);
+            _selectedImagePath = null;
+          }
           _detectionResult = null;
         });
       }
@@ -314,7 +323,8 @@ class _DetectionScreenState extends State<DetectionScreen> {
   }
 
   Future<void> _detectImage() async {
-    if (_selectedImage == null) return;
+    final imagePath = kIsWeb ? _selectedImagePath : _selectedImage?.path;
+    if (imagePath == null) return;
 
     setState(() {
       _isProcessing = true;
@@ -323,7 +333,7 @@ class _DetectionScreenState extends State<DetectionScreen> {
 
     try {
       final result = await _detectionService.detectImage(
-        _selectedImage!.path,
+        imagePath,
         threshold: _confidenceThreshold,
       );
       
@@ -424,6 +434,7 @@ class _DetectionScreenState extends State<DetectionScreen> {
 
           setState(() {
             _selectedImage = null;
+            _selectedImagePath = null;
             _detectionResult = null;
           });
 
@@ -766,7 +777,7 @@ class _DetectionScreenState extends State<DetectionScreen> {
                             ),
                           ],
                         ),
-                ] else if (_selectedImage != null) ...[
+                ] else if (_selectedImage != null || _selectedImagePath != null) ...[
                   // Static Image Display - responsive
                   Container(
                     height: isSmallScreen ? 300 : 400,
@@ -776,11 +787,23 @@ class _DetectionScreenState extends State<DetectionScreen> {
                     ),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(8),
-                      child: Image.file(
-                        _selectedImage!,
-                        fit: BoxFit.cover,
-                        cacheWidth: 800, // Optimize memory for mobile
-                      ),
+                      child: kIsWeb && _selectedImagePath != null
+                          ? Image.network(
+                              _selectedImagePath!,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return const Center(
+                                  child: Icon(Icons.error, size: 48, color: Colors.red),
+                                );
+                              },
+                            )
+                          : _selectedImage != null
+                              ? Image.file(
+                                  _selectedImage!,
+                                  fit: BoxFit.cover,
+                                  cacheWidth: 800, // Optimize memory for mobile
+                                )
+                              : const Center(child: Icon(Icons.image, size: 48)),
                     ),
                   ),
                   SizedBox(height: isSmallScreen ? 12 : 16),
