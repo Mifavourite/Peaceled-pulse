@@ -1,8 +1,11 @@
 import 'package:bcrypt/bcrypt.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:crypto/crypto.dart';
+import 'dart:convert';
 import '../services/database_service.dart';
 
-/// Authentication Service with bcrypt password hashing
+/// Authentication Service with bcrypt password hashing (SHA-256 on web)
 class AuthService {
   final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
   final DatabaseService _databaseService = DatabaseService();
@@ -15,15 +18,41 @@ class AuthService {
     await _databaseService.initialize();
   }
 
-  /// Register a new user with bcrypt password hashing
+  /// Hash password (uses SHA-256 on web, bcrypt on native)
+  String _hashPassword(String password) {
+    if (kIsWeb) {
+      // Use SHA-256 for web (bcrypt doesn't work on web)
+      final bytes = utf8.encode(password);
+      final digest = sha256.convert(bytes);
+      return digest.toString();
+    } else {
+      // Use bcrypt for native platforms
+      final salt = BCrypt.gensalt();
+      return BCrypt.hashpw(password, salt);
+    }
+  }
+
+  /// Verify password (uses SHA-256 on web, bcrypt on native)
+  bool _verifyPassword(String password, String hashedPassword) {
+    if (kIsWeb) {
+      // Use SHA-256 for web
+      final bytes = utf8.encode(password);
+      final digest = sha256.convert(bytes);
+      return digest.toString() == hashedPassword;
+    } else {
+      // Use bcrypt for native platforms
+      return BCrypt.checkpw(password, hashedPassword);
+    }
+  }
+
+  /// Register a new user with password hashing
   Future<bool> register(String username, String password) async {
     try {
       print('Attempting to register user: $username');
-      // Hash password with bcrypt (cost factor 12 for good security)
-      final salt = BCrypt.gensalt();
-      print('Salt generated');
-      final hashedPassword = BCrypt.hashpw(password, salt);
-      print('Password hashed');
+      
+      // Hash password
+      final hashedPassword = _hashPassword(password);
+      print('Password hashed successfully');
 
       // Store user in encrypted database
       final userId = await _databaseService.createUser(username, hashedPassword);
@@ -52,9 +81,9 @@ class AuthService {
         return false;
       }
 
-      // Verify password with bcrypt
+      // Verify password
       print('Verifying password');
-      final isValid = BCrypt.checkpw(password, user['password'] as String);
+      final isValid = _verifyPassword(password, user['password'] as String);
       print('Password valid: $isValid');
       
       if (isValid) {
@@ -101,8 +130,7 @@ class AuthService {
       }
 
       // Hash new password
-      final salt = BCrypt.gensalt();
-      final hashedPassword = BCrypt.hashpw(newPassword, salt);
+      final hashedPassword = _hashPassword(newPassword);
 
       // Update in database
       return await _databaseService.updateUserPassword(username, hashedPassword);
