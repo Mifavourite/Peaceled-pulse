@@ -34,11 +34,8 @@ class _PornWarningScreenState extends State<PornWarningScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        // Prevent going back to the porn site
-        return false;
-      },
+    return PopScope(
+      canPop: false, // Prevent going back to the porn site
       child: Scaffold(
         backgroundColor: Colors.red.shade900,
         body: SafeArea(

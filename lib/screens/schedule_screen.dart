@@ -113,7 +113,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Schedule'),
-        backgroundColor: Colors.blue.shade900,
+        backgroundColor: const Color(0xFF6366F1),
         foregroundColor: Colors.white,
         actions: [
           IconButton(
@@ -135,7 +135,14 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                 // Stats Card
                 Container(
                   padding: const EdgeInsets.all(16),
-                  color: Colors.blue.shade50,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        const Color(0xFF6366F1).withOpacity(0.1),
+                        const Color(0xFF8B5CF6).withOpacity(0.05),
+                      ],
+                    ),
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
@@ -164,7 +171,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                           onSelected: (selected) {
                             setState(() => _selectedDay = day);
                           },
-                          selectedColor: Colors.blue.shade200,
+                          selectedColor: const Color(0xFF6366F1).withOpacity(0.2),
                         ),
                       );
                     },
@@ -193,7 +200,9 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                             timeSlot,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              color: isCompleted ? Colors.green.shade700 : Colors.blue.shade900,
+                              color: isCompleted 
+                                  ? const Color(0xFF10B981) 
+                                  : const Color(0xFF6366F1),
                             ),
                           ),
                           subtitle: activity.isEmpty
@@ -219,14 +228,14 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   Widget _buildStatItem(String label, String value, IconData icon) {
     return Column(
       children: [
-        Icon(icon, color: Colors.blue.shade900),
+        Icon(icon, color: const Color(0xFF6366F1)),
         const SizedBox(height: 4),
         Text(
           value,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: Colors.blue.shade900,
+            color: Color(0xFF6366F1),
           ),
         ),
         Text(

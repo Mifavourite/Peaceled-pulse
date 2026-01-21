@@ -154,9 +154,9 @@ class ScheduleService {
           if (completionsJson != null) {
             final schedule = await getSchedule(userId);
             final dayName = _getDayName(date.weekday);
-            final daySchedule = schedule[dayName] ?? {};
+            final daySchedule = schedule[dayName] ?? <String, String>{};
             final dayCompletions = jsonDecode(completionsJson) as Map<String, dynamic>;
-            final dayCompletionsMap = (dayCompletions[dayName] as Map?) ?? {};
+            final dayCompletionsMap = (dayCompletions[dayName] as Map<String, dynamic>?) ?? <String, dynamic>{};
             
             int total = daySchedule.values.where((v) => v.isNotEmpty).length;
             int completed = dayCompletionsMap.values.where((v) => v == true).length;
