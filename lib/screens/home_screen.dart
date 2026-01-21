@@ -37,8 +37,14 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Recovery Journey'),
-        backgroundColor: Colors.blue.shade900,
+        title: const Text(
+          'Peaceled Pulse',
+          style: TextStyle(
+            fontWeight: FontWeight.w700,
+            letterSpacing: 0.5,
+          ),
+        ),
+        backgroundColor: const Color(0xFF6366F1),
         foregroundColor: Colors.white,
         actions: [
           // Emergency button (always visible)
@@ -98,8 +104,14 @@ class _HomeScreenState extends State<HomeScreen> {
           });
         },
         type: BottomNavigationBarType.fixed,
-        selectedItemColor: Colors.blue.shade700,
-        unselectedItemColor: Colors.grey,
+        selectedItemColor: const Color(0xFF6366F1),
+        unselectedItemColor: Colors.grey.shade500,
+        backgroundColor: Colors.white,
+        elevation: 8,
+        selectedLabelStyle: const TextStyle(
+          fontWeight: FontWeight.w600,
+          fontSize: 12,
+        ),
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.dashboard),

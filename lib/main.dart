@@ -47,17 +47,48 @@ class SecureFlutterApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Recovery Journey',
+      title: 'Peaceled Pulse',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
         useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-        // cardTheme: const CardTheme(
-        //   elevation: 2,
-        //   shape: RoundedRectangleBorder(
-        //     borderRadius: BorderRadius.all(Radius.circular(12)),
-        //   ),
-        // ),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF6366F1), // Indigo
+          brightness: Brightness.light,
+        ),
+        cardTheme: CardTheme(
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+            side: BorderSide(color: Colors.grey.shade200, width: 1),
+          ),
+        ),
+        appBarTheme: AppBarTheme(
+          elevation: 0,
+          centerTitle: true,
+          backgroundColor: const Color(0xFF6366F1),
+          foregroundColor: Colors.white,
+          titleTextStyle: const TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.w600,
+            letterSpacing: -0.5,
+          ),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            elevation: 0,
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+        ),
+        inputDecorationTheme: InputDecorationTheme(
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: Colors.grey.shade300),
+          ),
+          filled: true,
+          fillColor: Colors.grey.shade50,
+        ),
       ),
       initialRoute: initialRoute,
       routes: {

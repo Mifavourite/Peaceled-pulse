@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 import '../services/database_service.dart';
 import 'dart:math' as math;
+import 'package:intl/intl.dart';
 import 'daily_checkin_screen.dart';
 import 'emergency_support_screen.dart';
 import 'values_screen.dart';
@@ -134,11 +135,11 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
   }
 
   Color _getStreakColor() {
-    if (_streakDays == 0) return Colors.grey;
-    if (_streakDays < 7) return Colors.blue;
-    if (_streakDays < 30) return Colors.green;
-    if (_streakDays < 90) return Colors.orange;
-    return Colors.purple;
+    if (_streakDays == 0) return Colors.grey.shade400;
+    if (_streakDays < 7) return const Color(0xFF6366F1);
+    if (_streakDays < 30) return const Color(0xFF10B981);
+    if (_streakDays < 90) return const Color(0xFFF59E0B);
+    return const Color(0xFF8B5CF6);
   }
 
   Widget _buildMilestoneCard(int milestone, String title, IconData icon) {
@@ -205,44 +206,61 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     // Welcome Header
-                    const Text(
-                      'Your Recovery Journey',
-                      style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
+                    Container(
+                      padding: const EdgeInsets.symmetric(vertical: 20),
+                      child: Column(
+                        children: [
+                          Text(
+                            'Peaceled Pulse',
+                            style: TextStyle(
+                              fontSize: 32,
+                              fontWeight: FontWeight.w800,
+                              letterSpacing: 1,
+                              color: const Color(0xFF6366F1),
+                              shadows: [
+                                Shadow(
+                                  color: const Color(0xFF6366F1).withOpacity(0.3),
+                                  offset: const Offset(0, 2),
+                                  blurRadius: 8,
+                                ),
+                              ],
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            DateFormat('EEEE, MMMM d, yyyy').format(DateTime.now()),
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.grey.shade600,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
                       ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      DateTime.now().toString().split(' ')[0],
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey.shade600,
-                      ),
-                      textAlign: TextAlign.center,
                     ),
                     
                     const SizedBox(height: 24),
 
                     // Streak Counter - Main Feature
                     Container(
-                      padding: const EdgeInsets.all(24),
+                      padding: const EdgeInsets.all(32),
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
-                            _getStreakColor().withOpacity(0.8),
-                            _getStreakColor(),
+                            const Color(0xFF6366F1),
+                            const Color(0xFF8B5CF6),
                           ],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                         ),
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(24),
                         boxShadow: [
                           BoxShadow(
-                            color: _getStreakColor().withOpacity(0.3),
-                            blurRadius: 10,
-                            offset: const Offset(0, 5),
+                            color: const Color(0xFF6366F1).withOpacity(0.4),
+                            blurRadius: 20,
+                            offset: const Offset(0, 8),
                           ),
                         ],
                       ),
@@ -323,14 +341,28 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
 
                     // Motivational Quote Card
                     Container(
-                      padding: const EdgeInsets.all(20),
+                      padding: const EdgeInsets.all(24),
                       decoration: BoxDecoration(
-                        color: _currentQuote['color'].withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: _currentQuote['color'].withOpacity(0.3),
-                          width: 2,
+                        gradient: LinearGradient(
+                          colors: [
+                            _currentQuote['color'].withOpacity(0.1),
+                            _currentQuote['color'].withOpacity(0.05),
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
                         ),
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                          color: _currentQuote['color'].withOpacity(0.2),
+                          width: 1.5,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.05),
+                            blurRadius: 10,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
                       ),
                       child: Row(
                         children: [
@@ -419,9 +451,9 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
                             icon: const Icon(Icons.check_circle_outline),
                             label: const Text('Check-In'),
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.blue.shade600,
+                              backgroundColor: const Color(0xFF6366F1),
                               foregroundColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(vertical: 14),
+                              padding: const EdgeInsets.symmetric(vertical: 16),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
@@ -441,9 +473,9 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
                             icon: const Icon(Icons.phone_in_talk),
                             label: const Text('Support'),
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.red.shade600,
+                              backgroundColor: const Color(0xFFEF4444),
                               foregroundColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(vertical: 14),
+                              padding: const EdgeInsets.symmetric(vertical: 16),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
@@ -467,9 +499,9 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
                       icon: const Icon(Icons.favorite),
                       label: const Text('Save My Values'),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.purple.shade600,
+                        backgroundColor: const Color(0xFF8B5CF6),
                         foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -491,14 +523,28 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
 
   Widget _buildStatCard(String label, String value, IconData icon, Color color) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: color.withOpacity(0.3),
-          width: 2,
+        gradient: LinearGradient(
+          colors: [
+            color.withOpacity(0.15),
+            color.withOpacity(0.05),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
         ),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: color.withOpacity(0.2),
+          width: 1.5,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: color.withOpacity(0.1),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
         children: [
