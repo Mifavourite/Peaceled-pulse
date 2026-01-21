@@ -5,6 +5,7 @@ import 'dart:math' as math;
 import 'daily_checkin_screen.dart';
 import 'emergency_support_screen.dart';
 import 'values_screen.dart';
+import '../widgets/url_checker_widget.dart';
 
 /// Motivational Dashboard Screen - Shows progress, streak, and encouragement
 class DashboardScreen extends StatefulWidget {
@@ -474,6 +475,11 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
                         ),
                       ),
                     ),
+
+                    const SizedBox(height: 16),
+                    
+                    // URL Safety Checker (Web only)
+                    const UrlCheckerWidget(),
 
                     const SizedBox(height: 16),
                   ],

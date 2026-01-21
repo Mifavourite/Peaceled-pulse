@@ -4,6 +4,8 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'services/auth_service.dart';
 import 'screens/login_screen.dart';
 import 'screens/home_screen.dart';
+import 'screens/recovery_screen.dart';
+import 'screens/porn_warning_screen.dart';
 import 'utils/performance_monitor.dart';
 
 void main() async {
@@ -61,6 +63,11 @@ class SecureFlutterApp extends StatelessWidget {
       routes: {
         '/login': (context) => const LoginScreen(),
         '/home': (context) => const HomeScreen(),
+        '/recovery': (context) => RecoveryScreen(
+          onContinue: () {
+            Navigator.of(context).pushReplacementNamed('/home');
+          },
+        ),
       },
       debugShowCheckedModeBanner: false,
     );

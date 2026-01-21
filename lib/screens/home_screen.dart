@@ -10,6 +10,7 @@ import 'feedback_screen.dart';
 import 'settings_screen.dart';
 import 'emergency_support_screen.dart';
 import 'daily_checkin_screen.dart';
+import 'schedule_screen.dart';
 
 /// Home Screen with navigation to main features
 class HomeScreen extends StatefulWidget {
@@ -25,6 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final List<Widget> _screens = [
     const DashboardScreen(),
+    const ScheduleScreen(),
     const DetectionScreen(),
     const ValuesScreen(),
     const VictoryLogScreen(),
@@ -102,6 +104,10 @@ class _HomeScreenState extends State<HomeScreen> {
           BottomNavigationBarItem(
             icon: Icon(Icons.dashboard),
             label: 'Dashboard',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.schedule),
+            label: 'Schedule',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.security),
