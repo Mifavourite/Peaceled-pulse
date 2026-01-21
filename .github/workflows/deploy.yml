@@ -30,7 +30,7 @@ jobs:
         run: flutter pub get
       
       - name: Build web
-        run: flutter build web --base-href "/Peaceled-pulse/" --release --web-renderer canvaskit
+        run: flutter build web --base-href "/Peaceled-pulse/" --release
       
       - name: Setup Pages
         uses: actions/configure-pages@v4
