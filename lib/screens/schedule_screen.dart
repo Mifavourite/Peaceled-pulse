@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import '../services/auth_service.dart';
-import '../services/database_service.dart';
 import '../services/schedule_service.dart';
 
 /// Schedule/Timetable Screen - Create and track daily schedules
@@ -15,7 +13,6 @@ class ScheduleScreen extends StatefulWidget {
 class _ScheduleScreenState extends State<ScheduleScreen> {
   final _scheduleService = ScheduleService();
   final _authService = AuthService();
-  final _databaseService = DatabaseService();
   
   Map<String, Map<String, String>> _schedule = {};
   Map<String, Map<String, bool>> _completions = {};
