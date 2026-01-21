@@ -99,6 +99,7 @@ class SecureFlutterApp extends StatelessWidget {
             Navigator.of(context).pushReplacementNamed('/home');
           },
         ),
+        '/chat': (context) => const HomeScreen(), // Will navigate to chat tab
       },
       debugShowCheckedModeBanner: false,
     );

@@ -515,6 +515,334 @@ class DatabaseService {
     }
   }
 
+  /// Add journal entry
+  Future<int?> addJournalEntry(int userId, String title, String content, DateTime date) async {
+    try {
+      if (kIsWeb && _webStorage != null) {
+        final entriesKey = 'journal_entries_$userId';
+        final entriesJson = _webStorage!.getString(entriesKey) ?? '[]';
+        final entries = jsonDecode(entriesJson) as List;
+        
+        final now = DateTime.now().millisecondsSinceEpoch;
+        final dateMs = date.millisecondsSinceEpoch;
+        final newId = entries.isEmpty ? 1 : (entries.map((e) => e['id'] as int).reduce((a, b) => a > b ? a : b) + 1);
+        
+        entries.add({
+          'id': newId,
+          'user_id': userId,
+          'title': title,
+          'content': content,
+          'date': dateMs,
+          'created_at': now,
+        });
+        
+        await _webStorage!.setString(entriesKey, jsonEncode(entries));
+        return newId;
+      }
+      
+      final db = database;
+      final now = DateTime.now().millisecondsSinceEpoch;
+      final dateMs = date.millisecondsSinceEpoch;
+      
+      final id = await db.insert(
+        'journal_entries',
+        {
+          'user_id': userId,
+          'title': title,
+          'content': content,
+          'date': dateMs,
+          'created_at': now,
+        },
+      );
+      return id;
+    } catch (e) {
+      print('Error adding journal entry: $e');
+      return null;
+    }
+  }
+
+  /// Get journal entries
+  Future<List<Map<String, dynamic>>> getJournalEntries(int userId) async {
+    try {
+      if (kIsWeb && _webStorage != null) {
+        final entriesKey = 'journal_entries_$userId';
+        final entriesJson = _webStorage!.getString(entriesKey) ?? '[]';
+        final entries = jsonDecode(entriesJson) as List;
+        
+        final entriesList = entries.map((e) => Map<String, dynamic>.from(e)).toList();
+        entriesList.sort((a, b) => (b['date'] as int).compareTo(a['date'] as int));
+        
+        return entriesList;
+      }
+      
+      final db = database;
+      final results = await db.query(
+        'journal_entries',
+        where: 'user_id = ?',
+        whereArgs: [userId],
+        orderBy: 'date DESC',
+      );
+      return results;
+    } catch (e) {
+      print('Error getting journal entries: $e');
+      return [];
+    }
+  }
+
+  /// Update journal entry
+  Future<bool> updateJournalEntry(int userId, String entryId, String title, String content, DateTime date) async {
+    try {
+      if (kIsWeb && _webStorage != null) {
+        final entriesKey = 'journal_entries_$userId';
+        final entriesJson = _webStorage!.getString(entriesKey) ?? '[]';
+        final entries = jsonDecode(entriesJson) as List;
+        
+        final entryIndex = entries.indexWhere((e) => e['id'].toString() == entryId);
+        if (entryIndex != -1) {
+          entries[entryIndex] = {
+            ...entries[entryIndex],
+            'title': title,
+            'content': content,
+            'date': date.millisecondsSinceEpoch,
+          };
+          await _webStorage!.setString(entriesKey, jsonEncode(entries));
+          return true;
+        }
+        return false;
+      }
+      
+      final db = database;
+      final count = await db.update(
+        'journal_entries',
+        {
+          'title': title,
+          'content': content,
+          'date': date.millisecondsSinceEpoch,
+        },
+        where: 'id = ? AND user_id = ?',
+        whereArgs: [entryId, userId],
+      );
+      return count > 0;
+    } catch (e) {
+      print('Error updating journal entry: $e');
+      return false;
+    }
+  }
+
+  /// Delete journal entry
+  Future<bool> deleteJournalEntry(int userId, String entryId) async {
+    try {
+      if (kIsWeb && _webStorage != null) {
+        final entriesKey = 'journal_entries_$userId';
+        final entriesJson = _webStorage!.getString(entriesKey) ?? '[]';
+        final entries = jsonDecode(entriesJson) as List;
+        
+        entries.removeWhere((e) => e['id'].toString() == entryId);
+        await _webStorage!.setString(entriesKey, jsonEncode(entries));
+        return true;
+      }
+      
+      final db = database;
+      final count = await db.delete(
+        'journal_entries',
+        where: 'id = ? AND user_id = ?',
+        whereArgs: [entryId, userId],
+      );
+      return count > 0;
+    } catch (e) {
+      print('Error deleting journal entry: $e');
+      return false;
+    }
+  }
+
+  /// Add goal
+  Future<int?> addGoal(int userId, String title, String description, String type, DateTime? targetDate) async {
+    try {
+      if (kIsWeb && _webStorage != null) {
+        final goalsKey = 'goals_$userId';
+        final goalsJson = _webStorage!.getString(goalsKey) ?? '[]';
+        final goals = jsonDecode(goalsJson) as List;
+        
+        final now = DateTime.now().millisecondsSinceEpoch;
+        final newId = goals.isEmpty ? 1 : (goals.map((g) => g['id'] as int).reduce((a, b) => a > b ? a : b) + 1);
+        
+        goals.add({
+          'id': newId,
+          'user_id': userId,
+          'title': title,
+          'description': description,
+          'type': type,
+          'target_date': targetDate?.millisecondsSinceEpoch,
+          'completed': 0,
+          'created_at': now,
+        });
+        
+        await _webStorage!.setString(goalsKey, jsonEncode(goals));
+        return newId;
+      }
+      
+      final db = database;
+      final now = DateTime.now().millisecondsSinceEpoch;
+      
+      final id = await db.insert(
+        'goals',
+        {
+          'user_id': userId,
+          'title': title,
+          'description': description,
+          'type': type,
+          'target_date': targetDate?.millisecondsSinceEpoch,
+          'completed': 0,
+          'created_at': now,
+        },
+      );
+      return id;
+    } catch (e) {
+      print('Error adding goal: $e');
+      return null;
+    }
+  }
+
+  /// Get goals
+  Future<List<Map<String, dynamic>>> getGoals(int userId) async {
+    try {
+      if (kIsWeb && _webStorage != null) {
+        final goalsKey = 'goals_$userId';
+        final goalsJson = _webStorage!.getString(goalsKey) ?? '[]';
+        final goals = jsonDecode(goalsJson) as List;
+        
+        final goalsList = goals.map((g) => Map<String, dynamic>.from(g)).toList();
+        goalsList.sort((a, b) => (b['created_at'] as int).compareTo(a['created_at'] as int));
+        
+        return goalsList;
+      }
+      
+      final db = database;
+      final results = await db.query(
+        'goals',
+        where: 'user_id = ?',
+        whereArgs: [userId],
+        orderBy: 'created_at DESC',
+      );
+      return results;
+    } catch (e) {
+      print('Error getting goals: $e');
+      return [];
+    }
+  }
+
+  /// Update goal status
+  Future<bool> updateGoalStatus(int userId, String goalId, bool completed) async {
+    try {
+      if (kIsWeb && _webStorage != null) {
+        final goalsKey = 'goals_$userId';
+        final goalsJson = _webStorage!.getString(goalsKey) ?? '[]';
+        final goals = jsonDecode(goalsJson) as List;
+        
+        final goalIndex = goals.indexWhere((g) => g['id'].toString() == goalId);
+        if (goalIndex != -1) {
+          goals[goalIndex]['completed'] = completed ? 1 : 0;
+          await _webStorage!.setString(goalsKey, jsonEncode(goals));
+          return true;
+        }
+        return false;
+      }
+      
+      final db = database;
+      final count = await db.update(
+        'goals',
+        {'completed': completed ? 1 : 0},
+        where: 'id = ? AND user_id = ?',
+        whereArgs: [goalId, userId],
+      );
+      return count > 0;
+    } catch (e) {
+      print('Error updating goal status: $e');
+      return false;
+    }
+  }
+
+  /// Delete goal
+  Future<bool> deleteGoal(int userId, String goalId) async {
+    try {
+      if (kIsWeb && _webStorage != null) {
+        final goalsKey = 'goals_$userId';
+        final goalsJson = _webStorage!.getString(goalsKey) ?? '[]';
+        final goals = jsonDecode(goalsJson) as List;
+        
+        goals.removeWhere((g) => g['id'].toString() == goalId);
+        await _webStorage!.setString(goalsKey, jsonEncode(goals));
+        return true;
+      }
+      
+      final db = database;
+      final count = await db.delete(
+        'goals',
+        where: 'id = ? AND user_id = ?',
+        whereArgs: [goalId, userId],
+      );
+      return count > 0;
+    } catch (e) {
+      print('Error deleting goal: $e');
+      return false;
+    }
+  }
+
+  /// Add check-in
+  Future<int?> addCheckIn(int userId, Map<String, dynamic> checkInData) async {
+    try {
+      if (kIsWeb && _webStorage != null) {
+        final checkInsKey = 'check_ins_$userId';
+        final checkInsJson = _webStorage!.getString(checkInsKey) ?? '[]';
+        final checkIns = jsonDecode(checkInsJson) as List;
+        
+        final newId = checkIns.isEmpty ? 1 : (checkIns.map((c) => c['id'] as int).reduce((a, b) => a > b ? a : b) + 1);
+        checkIns.add({
+          'id': newId,
+          ...checkInData,
+        });
+        
+        await _webStorage!.setString(checkInsKey, jsonEncode(checkIns));
+        return newId;
+      }
+      
+      final db = database;
+      final id = await db.insert('check_ins', checkInData);
+      return id;
+    } catch (e) {
+      print('Error adding check-in: $e');
+      return null;
+    }
+  }
+
+  /// Get check-ins
+  Future<List<Map<String, dynamic>>> getCheckIns(int userId) async {
+    try {
+      if (kIsWeb && _webStorage != null) {
+        final checkInsKey = 'check_ins_$userId';
+        final checkInsJson = _webStorage!.getString(checkInsKey) ?? '[]';
+        final checkIns = jsonDecode(checkInsJson) as List;
+        
+        final checkInsList = checkIns.map((c) => Map<String, dynamic>.from(c)).toList();
+        checkInsList.sort((a, b) => (b['timestamp'] as int).compareTo(a['timestamp'] as int));
+        
+        return checkInsList;
+      }
+      
+      final db = database;
+      final results = await db.query(
+        'check_ins',
+        where: 'user_id = ?',
+        whereArgs: [userId],
+        orderBy: 'timestamp DESC',
+      );
+      return results;
+    } catch (e) {
+      print('Error getting check-ins: $e');
+      return [];
+    }
+  }
+
   /// Close database
   Future<void> close() async {
     if (_database != null) {

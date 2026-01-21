@@ -11,6 +11,11 @@ import 'settings_screen.dart';
 import 'emergency_support_screen.dart';
 import 'daily_checkin_screen.dart';
 import 'schedule_screen.dart';
+import 'journal_screen.dart';
+import 'goals_screen.dart';
+import 'prayer_timer_screen.dart';
+import 'progress_analytics_screen.dart';
+import 'resources_screen.dart';
 
 /// Home Screen with navigation to main features
 class HomeScreen extends StatefulWidget {
@@ -32,6 +37,13 @@ class _HomeScreenState extends State<HomeScreen> {
     const VictoryLogScreen(),
     const ChatScreen(),
   ];
+  
+  // Additional screens accessible from menu
+  void _navigateToScreen(Widget screen) {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => screen),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,17 +71,86 @@ class _HomeScreenState extends State<HomeScreen> {
             },
             tooltip: 'Emergency Support',
           ),
-          // Settings button
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const SettingsScreen(),
+          // More menu
+          PopupMenuButton(
+            icon: const Icon(Icons.more_vert),
+            itemBuilder: (context) => [
+              const PopupMenuItem(
+                value: 'journal',
+                child: ListTile(
+                  leading: Icon(Icons.book),
+                  title: Text('Journal'),
+                  contentPadding: EdgeInsets.zero,
                 ),
-              );
+              ),
+              const PopupMenuItem(
+                value: 'goals',
+                child: ListTile(
+                  leading: Icon(Icons.flag),
+                  title: Text('Goals'),
+                  contentPadding: EdgeInsets.zero,
+                ),
+              ),
+              const PopupMenuItem(
+                value: 'prayer',
+                child: ListTile(
+                  leading: Icon(Icons.self_improvement),
+                  title: Text('Prayer Timer'),
+                  contentPadding: EdgeInsets.zero,
+                ),
+              ),
+              const PopupMenuItem(
+                value: 'analytics',
+                child: ListTile(
+                  leading: Icon(Icons.analytics),
+                  title: Text('Progress Analytics'),
+                  contentPadding: EdgeInsets.zero,
+                ),
+              ),
+              const PopupMenuItem(
+                value: 'resources',
+                child: ListTile(
+                  leading: Icon(Icons.library_books),
+                  title: Text('Resources'),
+                  contentPadding: EdgeInsets.zero,
+                ),
+              ),
+              const PopupMenuDivider(),
+              const PopupMenuItem(
+                value: 'settings',
+                child: ListTile(
+                  leading: Icon(Icons.settings),
+                  title: Text('Settings'),
+                  contentPadding: EdgeInsets.zero,
+                ),
+              ),
+            ],
+            onSelected: (value) {
+              switch (value) {
+                case 'journal':
+                  _navigateToScreen(const JournalScreen());
+                  break;
+                case 'goals':
+                  _navigateToScreen(const GoalsScreen());
+                  break;
+                case 'prayer':
+                  _navigateToScreen(const PrayerTimerScreen());
+                  break;
+                case 'analytics':
+                  _navigateToScreen(const ProgressAnalyticsScreen());
+                  break;
+                case 'resources':
+                  _navigateToScreen(const ResourcesScreen());
+                  break;
+                case 'settings':
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const SettingsScreen(),
+                    ),
+                  );
+                  break;
+              }
             },
-            tooltip: 'Settings',
           ),
           // Beta feedback button
           IconButton(

@@ -80,7 +80,8 @@ class _DailyCheckInScreenState extends State<DailyCheckInScreen> {
           'timestamp': DateTime.now().millisecondsSinceEpoch,
         };
         
-        await _databaseService.database.then((db) => db.insert('check_ins', checkInData));
+        // Save check-in
+        await _databaseService.addCheckIn(userId, checkInData);
         
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
