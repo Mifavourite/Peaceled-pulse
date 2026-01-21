@@ -18,18 +18,23 @@ class AuthService {
   /// Register a new user with bcrypt password hashing
   Future<bool> register(String username, String password) async {
     try {
+      print('Attempting to register user: $username');
       // Hash password with bcrypt (cost factor 12 for good security)
       final salt = BCrypt.gensalt();
+      print('Salt generated');
       final hashedPassword = BCrypt.hashpw(password, salt);
+      print('Password hashed');
 
       // Store user in encrypted database
       final userId = await _databaseService.createUser(username, hashedPassword);
+      print('User ID returned: $userId');
       
       if (userId != null) {
         return true;
       }
       return false;
     } catch (e) {
+      print('Error in register: $e');
       return false;
     }
   }
@@ -37,25 +42,32 @@ class AuthService {
   /// Login user with password verification
   Future<bool> login(String username, String password) async {
     try {
+      print('Attempting to login user: $username');
       // Get user from encrypted database
       final user = await _databaseService.getUserByUsername(username);
+      print('User retrieved: ${user != null}');
       
       if (user == null) {
+        print('User not found');
         return false;
       }
 
       // Verify password with bcrypt
+      print('Verifying password');
       final isValid = BCrypt.checkpw(password, user['password'] as String);
+      print('Password valid: $isValid');
       
       if (isValid) {
         // Store session
         await _secureStorage.write(key: _sessionKey, value: 'authenticated');
         await _secureStorage.write(key: _userIdKey, value: user['id'].toString());
+        print('Login successful, session stored');
         return true;
       }
       
       return false;
     } catch (e) {
+      print('Error in login: $e');
       return false;
     }
   }

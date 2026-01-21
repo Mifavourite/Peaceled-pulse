@@ -180,12 +180,14 @@ class DatabaseService {
     try {
       if (kIsWeb && _webStorage != null) {
         // Web storage implementation
+        print('Creating user on web: $username');
         final usersKey = 'users';
         final usersJson = _webStorage!.getString(usersKey) ?? '[]';
         final users = jsonDecode(usersJson) as List;
         
         // Check if username exists
         if (users.any((u) => u['username'] == username)) {
+          print('Username already exists: $username');
           return null; // Username already exists
         }
         
@@ -200,6 +202,7 @@ class DatabaseService {
         });
         
         await _webStorage!.setString(usersKey, jsonEncode(users));
+        print('User created successfully with ID: $newId');
         return newId;
       }
       
@@ -215,8 +218,10 @@ class DatabaseService {
       //     'created_at': now,
       //   },
       // );
+      print('Not on web, SQLite disabled - returning null');
       return null; // Fallback for web
     } catch (e) {
+      print('Error creating user: $e');
       return null;
     }
   }
@@ -226,16 +231,22 @@ class DatabaseService {
     try {
       if (kIsWeb && _webStorage != null) {
         // Web storage implementation
+        print('Getting user on web: $username');
         final usersKey = 'users';
         final usersJson = _webStorage!.getString(usersKey) ?? '[]';
         final users = jsonDecode(usersJson) as List;
+        print('Total users in storage: ${users.length}');
         
         final user = users.firstWhere(
           (u) => u['username'] == username,
           orElse: () => null,
         );
         
-        if (user == null) return null;
+        if (user == null) {
+          print('User not found: $username');
+          return null;
+        }
+        print('User found: $username');
         return Map<String, dynamic>.from(user);
       }
       
@@ -250,6 +261,7 @@ class DatabaseService {
       if (results.isEmpty) return null;
       return results.first;
     } catch (e) {
+      print('Error getting user: $e');
       return null;
     }
   }
