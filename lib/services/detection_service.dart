@@ -1,12 +1,14 @@
 import 'dart:io';
-import 'package:tflite_flutter/tflite_flutter.dart';
+// import 'package:tflite_flutter/tflite_flutter.dart';  // Not available on web
 import 'package:image/image.dart' as img;
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 /// Image Detection Service using TFLite (NSFW Detection)
+/// On web, provides mock detection
 class DetectionService {
-  Interpreter? _interpreter;
+  dynamic _interpreter;
   bool _isInitialized = false;
 
   /// Initialize TFLite model
@@ -94,9 +96,9 @@ class DetectionService {
     for (int y = 0; y < image.height; y++) {
       for (int x = 0; x < image.width; x++) {
         final pixel = image.getPixel(x, y);
-        final r = img.getRed(pixel) / 255.0;
-        final g = img.getGreen(pixel) / 255.0;
-        final b = img.getBlue(pixel) / 255.0;
+        final r = pixel.r / 255.0;
+        final g = pixel.g / 255.0;
+        final b = pixel.b / 255.0;
         
         input[0][y][x][0] = r;
         input[0][y][x][1] = g;

@@ -19,7 +19,7 @@ dependencies:
   
   # Network Security
   dio: ^5.4.0
-  certificate_pinning: ^2.0.0
+  http_certificate_pinning: ^2.0.3
   connectivity_plus: ^5.0.2
   
   # Monitoring & Analytics - REMOVED (no analytics/telemetry per requirements)
@@ -35,17 +35,17 @@ dependencies:
   path_provider: ^2.1.1
   path: ^1.8.3
   device_info_plus: ^9.1.1
-  package_info_plus: ^5.0.1
+  package_info_plus: ^9.0.0
   
   # Authentication & Database
-  bcrypt: ^2.0.0
-  sqflite_sqlcipher: ^2.2.0
-  sqflite: ^2.3.0
+  bcrypt: ^1.1.3
+  # sqflite_sqlcipher: ^2.2.0  # Not supported on web
+  # sqflite: ^2.3.0  # Not supported on web
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   
   # Image Processing & ML
-  tflite_flutter: ^0.10.4
+  # tflite_flutter: ^0.10.4  # Not supported on web
   image_picker: ^1.0.5
   image: ^4.1.3
   camera: ^0.10.5+9

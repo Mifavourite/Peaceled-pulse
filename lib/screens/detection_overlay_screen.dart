@@ -41,7 +41,7 @@ class _DetectionOverlayScreenState extends State<DetectionOverlayScreen>
   final EmergencyOverrideService _overrideService = EmergencyOverrideService();
 
   // 15 scripture images (local assets) - cached
-  static const List<String> _scriptureImagePaths = List.generate(
+  static final List<String> _scriptureImagePaths = List.generate(
     15,
     (index) => 'assets/images/scriptures/scripture_${index + 1}.png',
   );

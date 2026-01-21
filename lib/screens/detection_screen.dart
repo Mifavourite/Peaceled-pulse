@@ -503,7 +503,7 @@ class _DetectionScreenState extends State<DetectionScreen> {
             icon: const Icon(Icons.delete_outline),
             onPressed: _clearAllData,
             tooltip: 'Clear all data',
-            minimumSize: const Size(48, 48), // Touch-friendly
+            iconSize: 24,
           ),
         ],
       ),
@@ -734,7 +734,7 @@ class _DetectionScreenState extends State<DetectionScreen> {
                                       ? Colors.red.shade700
                                       : Colors.green.shade700,
                                   foregroundColor: Colors.white,
-                                  minimumSize: const Size(0, buttonMinHeight),
+                                  minimumSize: Size(0, buttonMinHeight),
                                 ),
                               ),
                             ),
@@ -747,7 +747,7 @@ class _DetectionScreenState extends State<DetectionScreen> {
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.blue.shade700,
                                   foregroundColor: Colors.white,
-                                  minimumSize: const Size(0, buttonMinHeight),
+                                  minimumSize: Size(0, buttonMinHeight),
                                 ),
                               ),
                             ),
@@ -760,7 +760,7 @@ class _DetectionScreenState extends State<DetectionScreen> {
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.grey.shade700,
                                   foregroundColor: Colors.white,
-                                  minimumSize: const Size(0, buttonMinHeight),
+                                  minimumSize: Size(0, buttonMinHeight),
                                 ),
                               ),
                             ),
@@ -889,7 +889,7 @@ class _DetectionScreenState extends State<DetectionScreen> {
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.blue.shade700,
                                   foregroundColor: Colors.white,
-                                  minimumSize: const Size(0, buttonMinHeight),
+                                  minimumSize: Size(0, buttonMinHeight),
                                 ),
                               ),
                             ),
@@ -902,7 +902,7 @@ class _DetectionScreenState extends State<DetectionScreen> {
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.blue.shade700,
                                   foregroundColor: Colors.white,
-                                  minimumSize: const Size(0, buttonMinHeight),
+                                  minimumSize: Size(0, buttonMinHeight),
                                 ),
                               ),
                             ),

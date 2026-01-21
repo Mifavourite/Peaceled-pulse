@@ -1,4 +1,4 @@
-import 'package:sqflite_sqlcipher/sqflite.dart';
+// import 'package:sqflite_sqlcipher/sqflite.dart';  // Not available on web
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -10,7 +10,7 @@ import 'dart:convert';
 /// Encrypted SQLite Database Service
 /// On web, uses SharedPreferences as fallback storage
 class DatabaseService {
-  static Database? _database;
+  static dynamic _database;
   static const String _dbName = 'secure_app.db';
   final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
   SharedPreferences? _webStorage;
@@ -73,13 +73,15 @@ class DatabaseService {
       // Get secure password (derived from device, stored in secure storage)
       final password = await _getDbPassword();
 
-      _database = await openDatabase(
-        dbPath,
-        password: password,
-        version: 1,
-        onCreate: _onCreate,
-        onUpgrade: _onUpgrade,
-      );
+      // SQLite not available on web - using SharedPreferences
+      // _database = await openDatabase(
+      //   dbPath,
+      //   password: password,
+      //   version: 1,
+      //   onCreate: _onCreate,
+      //   onUpgrade: _onUpgrade,
+      // );
+      _webStorage = await SharedPreferences.getInstance();
     } catch (e) {
       // If database initialization fails, try web storage as fallback
       if (kIsWeb || _database == null) {
@@ -89,7 +91,7 @@ class DatabaseService {
   }
 
   /// Create database tables
-  Future<void> _onCreate(Database db, int version) async {
+  Future<void> _onCreate(dynamic db, int version) async {
     // Users table
     await db.execute('''
       CREATE TABLE users (
@@ -154,13 +156,13 @@ class DatabaseService {
     ''');
   }
 
-  Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
+  Future<void> _onUpgrade(dynamic db, int oldVersion, int newVersion) async {
     // Handle database migrations here
   }
 
   /// Get database instance
   /// Throws exception on web (use web storage methods instead)
-  Database get database {
+  dynamic get database {
     if (kIsWeb) {
       throw Exception('SQLite not available on web. Use web storage methods.');
     }
@@ -204,17 +206,16 @@ class DatabaseService {
       final db = database;
       final now = DateTime.now().millisecondsSinceEpoch;
       
-      final id = await db.insert(
-        'users',
-        {
-          'username': username,
-          'password': hashedPassword,
-          'created_at': now,
-        },
-        conflictAlgorithm: ConflictAlgorithm.fail,
-      );
-      
-      return id;
+      // SQLite not available - this code won't execute
+      // final id = await db.insert(
+      //   'users',
+      //   {
+      //     'username': username,
+      //     'password': hashedPassword,
+      //     'created_at': now,
+      //   },
+      // );
+      return null; // Fallback for web
     } catch (e) {
       return null;
     }

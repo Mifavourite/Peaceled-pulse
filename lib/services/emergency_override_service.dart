@@ -45,13 +45,14 @@ class EmergencyOverrideService {
 
     final delay = await getOverrideDelay();
     
-    return showDialog<bool>(
+    final result = await showDialog<bool>(
       context: context,
       barrierDismissible: false,
       builder: (context) => _EmergencyOverrideDialog(
         delaySeconds: delay,
       ),
-    ) ?? false;
+    );
+    return result ?? false;
   }
 
   void _showOverrideDisabledDialog(BuildContext context) {

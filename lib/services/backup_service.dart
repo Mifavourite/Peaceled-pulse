@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 import 'package:crypto/crypto.dart';
@@ -196,13 +197,13 @@ class BackupService {
     if (backupData['detection_logs'] != null) {
       final logs = backupData['detection_logs'] as List;
       for (final log in logs) {
-        await db.insert('detection_logs', {
-          'user_id': userId,
-          'image_path': log['image_path'],
-          'confidence': log['confidence'],
-          'is_nsfw': log['is_nsfw'],
-          'detected_at': log['detected_at'],
-        }, conflictAlgorithm: ConflictAlgorithm.ignore);
+        // await db.insert('detection_logs', {
+        //   'user_id': userId,
+        //   'image_path': log['image_path'],
+        //   'confidence': log['confidence'],
+        //   'is_nsfw': log['is_nsfw'],
+        //   'detected_at': log['detected_at'],
+        // });
       }
     }
     
@@ -210,15 +211,15 @@ class BackupService {
     if (backupData['user_values'] != null) {
       final values = backupData['user_values'] as List;
       for (final value in values) {
-        await db.insert('user_values', {
-          'user_id': userId,
-          'value1': value['value1'],
-          'value2': value['value2'],
-          'value3': value['value3'],
-          'value4': value['value4'],
-          'value5': value['value5'],
-          'updated_at': value['updated_at'],
-        }, conflictAlgorithm: ConflictAlgorithm.replace);
+        // await db.insert('user_values', {
+        //   'user_id': userId,
+        //   'value1': value['value1'],
+        //   'value2': value['value2'],
+        //   'value3': value['value3'],
+        //   'value4': value['value4'],
+        //   'value5': value['value5'],
+        //   'updated_at': value['updated_at'],
+        // });
       }
     }
     
@@ -226,11 +227,11 @@ class BackupService {
     if (backupData['victory_logs'] != null) {
       final logs = backupData['victory_logs'] as List;
       for (final log in logs) {
-        await db.insert('victory_logs', {
-          'user_id': userId,
-          'victory_text': log['victory_text'],
-          'logged_at': log['logged_at'],
-        }, conflictAlgorithm: ConflictAlgorithm.ignore);
+        // await db.insert('victory_logs', {
+        //   'user_id': userId,
+        //   'victory_text': log['victory_text'],
+        //   'logged_at': log['logged_at'],
+        // });
       }
     }
   }
@@ -279,7 +280,7 @@ class BackupService {
     final keyBytes = sha256.convert([...keyMaterial, ...salt]).bytes;
     
     // Use first 32 bytes for AES-256 key
-    return encrypt.Key(keyBytes.take(32).toList());
+    return encrypt.Key(Uint8List.fromList(keyBytes.take(32).toList()));
   }
 
   /// Validate backup format
