@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Content Warning - Recovery Journey</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #c62828 0%, #8e0000 100%);
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      text-align: center;
+    }
+    .container {
+      max-width: 600px;
+      padding: 40px;
+    }
+    .warning-icon {
+      font-size: 80px;
+      margin-bottom: 20px;
+    }
+    h1 {
+      font-size: 32px;
+      margin-bottom: 20px;
+    }
+    .verse-box {
+      background: white;
+      color: #333;
+      padding: 30px;
+      border-radius: 16px;
+      margin: 30px 0;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+    .verse-reference {
+      font-size: 20px;
+      font-weight: bold;
+      color: #1976d2;
+      margin-bottom: 15px;
+    }
+    .verse-text {
+      font-size: 16px;
+      font-style: italic;
+      line-height: 1.6;
+    }
+    button {
+      background: white;
+      color: #c62828;
+      border: none;
+      padding: 15px 30px;
+      font-size: 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin: 10px;
+      font-weight: bold;
+    }
+    button:hover {
+      background: #f5f5f5;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="warning-icon">⚠️</div>
+    <h1>Content Warning</h1>
+    <p style="font-size: 18px;">You attempted to access inappropriate content.</p>
+    
+    <div class="verse-box">
+      <div class="verse-reference" id="verseRef">Loading...</div>
+      <div class="verse-text" id="verseText">Loading...</div>
+    </div>
+    
+    <button onclick="goBack()">Go Back to Safe Content</button>
+    <button onclick="goToApp()">Open Recovery Journey App</button>
+  </div>
+
+  <script>
+    const verses = [
+      {
+        reference: '1 Corinthians 6:18',
+        text: 'Flee from sexual immorality. All other sins a person commits are outside the body, but whoever sins sexually, sins against their own body.'
+      },
+      {
+        reference: 'Matthew 5:28',
+        text: 'But I tell you that anyone who looks at a woman lustfully has already committed adultery with her in his heart.'
+      },
+      {
+        reference: 'Job 31:1',
+        text: 'I made a covenant with my eyes not to look lustfully at a young woman.'
+      }
+    ];
+
+    const randomVerse = verses[Math.floor(Math.random() * verses.length)];
+    document.getElementById('verseRef').textContent = randomVerse.reference;
+    document.getElementById('verseText').textContent = '"' + randomVerse.text + '"';
+
+    function goBack() {
+      window.history.back();
+    }
+
+    function goToApp() {
+      window.location.href = 'https://mifavourite.github.io/Peaceled-pulse/';
+    }
+  </script>
+</body>
+</html>
