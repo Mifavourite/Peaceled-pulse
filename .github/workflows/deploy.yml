@@ -27,7 +27,11 @@ jobs:
           channel: 'stable'
       
       - name: Install dependencies
-        run: flutter pub get
+        run: |
+          flutter pub get || {
+            echo "pub get failed, trying with --no-example"
+            flutter pub get --no-example || flutter pub get
+          }
         
       - name: Check Flutter doctor
         run: flutter doctor -v
