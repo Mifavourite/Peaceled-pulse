@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:audioplayers/audioplayers.dart';
 
 /// Prayer/Meditation Timer Screen
@@ -15,14 +16,22 @@ class _PrayerTimerScreenState extends State<PrayerTimerScreen> {
   int _secondsRemaining = 0;
   bool _isRunning = false;
   bool _isPaused = false;
-  final AudioPlayer _audioPlayer = AudioPlayer();
+  AudioPlayer? _audioPlayer;
   
   final List<int> _presetTimes = [5, 10, 15, 30, 60]; // minutes
 
   @override
+  void initState() {
+    super.initState();
+    if (!kIsWeb) {
+      _audioPlayer = AudioPlayer();
+    }
+  }
+
+  @override
   void dispose() {
     _timer?.cancel();
-    _audioPlayer.dispose();
+    _audioPlayer?.dispose();
     super.dispose();
   }
 
@@ -87,9 +96,13 @@ class _PrayerTimerScreenState extends State<PrayerTimerScreen> {
   }
 
   Future<void> _playCompletionSound() async {
+    if (kIsWeb || _audioPlayer == null) {
+      // On web, just show visual feedback
+      return;
+    }
     try {
       // Play a gentle completion sound
-      await _audioPlayer.play(AssetSource('audio/complete.mp3'));
+      await _audioPlayer!.play(AssetSource('audio/complete.mp3'));
     } catch (e) {
       // Sound file might not exist, that's okay
     }

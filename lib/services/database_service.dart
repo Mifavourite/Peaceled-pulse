@@ -154,6 +154,34 @@ class DatabaseService {
         FOREIGN KEY (user_id) REFERENCES users (id)
       )
     ''');
+
+    // Journal entries table
+    await db.execute('''
+      CREATE TABLE journal_entries (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL,
+        title TEXT NOT NULL,
+        content TEXT NOT NULL,
+        date INTEGER NOT NULL,
+        created_at INTEGER NOT NULL,
+        FOREIGN KEY (user_id) REFERENCES users (id)
+      )
+    ''');
+
+    // Goals table
+    await db.execute('''
+      CREATE TABLE goals (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL,
+        title TEXT NOT NULL,
+        description TEXT,
+        type TEXT NOT NULL,
+        target_date INTEGER,
+        completed INTEGER NOT NULL DEFAULT 0,
+        created_at INTEGER NOT NULL,
+        FOREIGN KEY (user_id) REFERENCES users (id)
+      )
+    ''');
   }
 
   Future<void> _onUpgrade(dynamic db, int oldVersion, int newVersion) async {

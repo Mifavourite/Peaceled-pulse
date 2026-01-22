@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 /// Resources Library Screen - Helpful articles, videos, and Bible study materials
 class ResourcesScreen extends StatefulWidget {
