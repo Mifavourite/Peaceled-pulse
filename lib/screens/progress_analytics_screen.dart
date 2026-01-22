@@ -68,6 +68,8 @@ class _ProgressAnalyticsScreenState extends State<ProgressAnalyticsScreen> {
           };
           _isLoading = false;
         });
+      } else {
+        setState(() => _isLoading = false);
       }
     } catch (e) {
       setState(() => _isLoading = false);
@@ -287,12 +289,14 @@ class _ProgressAnalyticsScreenState extends State<ProgressAnalyticsScreen> {
     int colorIndex = 0;
     return moodCounts.entries.map((entry) {
       final percentage = (entry.value / total * 100);
-      return PieChartSectionData(
+      final section = PieChartSectionData(
         value: percentage,
         title: '${percentage.toStringAsFixed(1)}%',
         color: colors[colorIndex % colors.length],
         radius: 60,
-      )..colorIndex = colorIndex++;
+      );
+      colorIndex++;
+      return section;
     }).toList();
   }
 

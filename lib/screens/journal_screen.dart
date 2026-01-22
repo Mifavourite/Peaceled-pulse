@@ -39,6 +39,8 @@ class _JournalScreenState extends State<JournalScreen> {
           _journalEntries = entries;
           _isLoading = false;
         });
+      } else {
+        setState(() => _isLoading = false);
       }
     } catch (e) {
       setState(() => _isLoading = false);

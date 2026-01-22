@@ -34,6 +34,8 @@ class _GoalsScreenState extends State<GoalsScreen> {
           _goals = goals;
           _isLoading = false;
         });
+      } else {
+        setState(() => _isLoading = false);
       }
     } catch (e) {
       setState(() => _isLoading = false);
