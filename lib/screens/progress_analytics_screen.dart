@@ -39,18 +39,28 @@ class _ProgressAnalyticsScreenState extends State<ProgressAnalyticsScreen> {
         // Calculate mood distribution
         final moodCounts = <String, int>{};
         for (var checkIn in checkIns) {
-          final mood = checkIn['mood'] as String? ?? 'Unknown';
-          moodCounts[mood] = (moodCounts[mood] ?? 0) + 1;
+          try {
+            final mood = checkIn['mood'] as String? ?? 'Unknown';
+            moodCounts[mood] = (moodCounts[mood] ?? 0) + 1;
+          } catch (e) {
+            // Skip invalid check-ins
+          }
         }
 
         // Calculate weekly victory trend
-        final now = DateTime.now();
         final weeklyVictories = <int, int>{};
         for (var log in victoryLogs) {
-          final date = DateTime.fromMillisecondsSinceEpoch(log['date'] as int);
-          final weekStart = date.subtract(Duration(days: date.weekday - 1));
-          final weekKey = weekStart.millisecondsSinceEpoch ~/ (1000 * 60 * 60 * 24 * 7);
-          weeklyVictories[weekKey] = (weeklyVictories[weekKey] ?? 0) + 1;
+          try {
+            final dateMs = log['date'] as int?;
+            if (dateMs != null) {
+              final date = DateTime.fromMillisecondsSinceEpoch(dateMs);
+              final weekStart = date.subtract(Duration(days: date.weekday - 1));
+              final weekKey = weekStart.millisecondsSinceEpoch ~/ (1000 * 60 * 60 * 24 * 7);
+              weeklyVictories[weekKey] = (weeklyVictories[weekKey] ?? 0) + 1;
+            }
+          } catch (e) {
+            // Skip invalid logs
+          }
         }
 
         setState(() {
@@ -277,7 +287,11 @@ class _ProgressAnalyticsScreenState extends State<ProgressAnalyticsScreen> {
 
   List<PieChartSectionData> _buildMoodSections() {
     final moodCounts = _stats['moodCounts'] as Map<String, int>;
+    if (moodCounts.isEmpty) return [];
+    
     final total = moodCounts.values.reduce((a, b) => a + b);
+    if (total == 0) return [];
+    
     final colors = [
       const Color(0xFF10B981), // Great
       const Color(0xFF6366F1), // Good
@@ -288,7 +302,7 @@ class _ProgressAnalyticsScreenState extends State<ProgressAnalyticsScreen> {
     
     int colorIndex = 0;
     return moodCounts.entries.map((entry) {
-      final percentage = (entry.value / total * 100);
+      final percentage = total > 0 ? (entry.value / total * 100) : 0.0;
       final section = PieChartSectionData(
         value: percentage,
         title: '${percentage.toStringAsFixed(1)}%',
@@ -302,17 +316,24 @@ class _ProgressAnalyticsScreenState extends State<ProgressAnalyticsScreen> {
 
   List<FlSpot> _buildWeeklySpots() {
     final weeklyVictories = _stats['weeklyVictories'] as Map<int, int>;
+    if (weeklyVictories.isEmpty) return [];
+    
     final sortedWeeks = weeklyVictories.keys.toList()..sort();
     return sortedWeeks.asMap().entries.map((entry) {
-      return FlSpot(entry.key.toDouble(), weeklyVictories[entry.value]!.toDouble());
+      final weekKey = entry.value;
+      final count = weeklyVictories[weekKey] ?? 0;
+      return FlSpot(entry.key.toDouble(), count.toDouble());
     }).toList();
   }
 
   List<BarChartGroupData> _buildScheduleBarGroups() {
     final scheduleStats = _stats['scheduleStats'] as List<Map<String, dynamic>>;
+    if (scheduleStats.isEmpty) return [];
+    
     return scheduleStats.asMap().entries.map((entry) {
       final stat = entry.value;
-      final percentage = double.parse(stat['percentage'] as String);
+      final percentageStr = stat['percentage'] as String? ?? '0';
+      final percentage = double.tryParse(percentageStr) ?? 0.0;
       return BarChartGroupData(
         x: entry.key,
         barRods: [
@@ -331,19 +352,32 @@ class _ProgressAnalyticsScreenState extends State<ProgressAnalyticsScreen> {
   }
 
   int _calculateActiveDays() {
-    final victoryLogs = _stats['victoryLogs'] as List;
-    final checkIns = _stats['checkIns'] as List;
+    final victoryLogs = _stats['victoryLogs'] as List? ?? [];
+    final checkIns = _stats['checkIns'] as List? ?? [];
     final allDates = <int>{};
     
     for (var log in victoryLogs) {
-      final date = DateTime.fromMillisecondsSinceEpoch(log['date'] as int);
-      allDates.add(DateTime(date.year, date.month, date.day).millisecondsSinceEpoch);
+      try {
+        final dateMs = log['date'] as int?;
+        if (dateMs != null) {
+          final date = DateTime.fromMillisecondsSinceEpoch(dateMs);
+          allDates.add(DateTime(date.year, date.month, date.day).millisecondsSinceEpoch);
+        }
+      } catch (e) {
+        // Skip invalid entries
+      }
     }
     
     for (var checkIn in checkIns) {
-      final timestamp = checkIn['timestamp'] as int;
-      final date = DateTime.fromMillisecondsSinceEpoch(timestamp);
-      allDates.add(DateTime(date.year, date.month, date.day).millisecondsSinceEpoch);
+      try {
+        final timestamp = checkIn['timestamp'] as int?;
+        if (timestamp != null) {
+          final date = DateTime.fromMillisecondsSinceEpoch(timestamp);
+          allDates.add(DateTime(date.year, date.month, date.day).millisecondsSinceEpoch);
+        }
+      } catch (e) {
+        // Skip invalid entries
+      }
     }
     
     return allDates.length;
