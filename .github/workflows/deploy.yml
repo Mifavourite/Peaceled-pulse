@@ -28,9 +28,21 @@ jobs:
       
       - name: Install dependencies
         run: flutter pub get
-      
+        
+      - name: Check Flutter doctor
+        run: flutter doctor -v
+        
+      - name: Analyze code
+        run: flutter analyze || true
+        
       - name: Build web
-        run: flutter build web --base-href "/Peaceled-pulse/" --release
+        run: |
+          flutter build web --base-href "/Peaceled-pulse/" --release 2>&1 | tee build.log
+          if [ $? -ne 0 ]; then
+            echo "Build failed. Showing last 100 lines of output:"
+            tail -100 build.log
+            exit 1
+          fi
         continue-on-error: false
       
       - name: Verify build output
