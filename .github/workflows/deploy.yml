@@ -39,14 +39,21 @@ jobs:
       - name: Analyze code
         run: flutter analyze || true
         
+      - name: Clean previous build
+        run: flutter clean || true
+        
       - name: Build web
         run: |
-          flutter build web --base-href "/Peaceled-pulse/" --release 2>&1 | tee build.log
-          if [ $? -ne 0 ]; then
-            echo "Build failed. Showing last 100 lines of output:"
-            tail -100 build.log
-            exit 1
+          echo "Starting Flutter web build..."
+          flutter build web --base-href "/Peaceled-pulse/" --release --verbose 2>&1 | tee build.log
+          BUILD_EXIT_CODE=$?
+          if [ $BUILD_EXIT_CODE -ne 0 ]; then
+            echo "❌ Build failed with exit code $BUILD_EXIT_CODE"
+            echo "Showing last 200 lines of output:"
+            tail -200 build.log
+            exit $BUILD_EXIT_CODE
           fi
+          echo "✅ Build completed successfully"
         continue-on-error: false
       
       - name: Verify build output
