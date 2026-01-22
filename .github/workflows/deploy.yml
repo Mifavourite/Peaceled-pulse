@@ -32,6 +32,11 @@ jobs:
       - name: Build web
         run: flutter build web --base-href "/Peaceled-pulse/" --release
       
+      - name: Verify build output
+        run: |
+          ls -la build/web/
+          echo "Build completed successfully"
+      
       - name: Setup Pages
         uses: actions/configure-pages@v4
       
