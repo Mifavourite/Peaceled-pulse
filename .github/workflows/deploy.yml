@@ -44,15 +44,9 @@ jobs:
         
       - name: Build web
         run: |
+          set -o pipefail
           echo "Starting Flutter web build..."
-          flutter build web --base-href "/Peaceled-pulse/" --release --verbose 2>&1 | tee build.log
-          BUILD_EXIT_CODE=$?
-          if [ $BUILD_EXIT_CODE -ne 0 ]; then
-            echo "❌ Build failed with exit code $BUILD_EXIT_CODE"
-            echo "Showing last 200 lines of output:"
-            tail -200 build.log
-            exit $BUILD_EXIT_CODE
-          fi
+          flutter build web --base-href "/Peaceled-pulse/" --release --web-renderer html 2>&1 | tee build.log
           echo "✅ Build completed successfully"
         continue-on-error: false
       
@@ -71,7 +65,8 @@ jobs:
             fi
           done
           if [ "$MISSING" -ne 0 ]; then
-            echo "Required files missing - failing build"
+            echo "Required files missing - showing last 300 lines of build log:"
+            tail -300 build.log
             exit 1
           fi
           echo "Build output verified"
