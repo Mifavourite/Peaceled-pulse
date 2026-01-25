@@ -61,13 +61,23 @@ jobs:
           echo "Checking build/web directory:"
           ls -la build/web/
           echo ""
-          echo "Checking for required files:"
-          test -f build/web/index.html && echo "✓ index.html exists" || echo "✗ index.html missing"
-          test -f build/web/main.dart.js && echo "✓ main.dart.js exists" || echo "✗ main.dart.js missing"
-          test -f build/web/flutter_service_worker.js && echo "✓ flutter_service_worker.js exists" || echo "✗ flutter_service_worker.js missing"
-          test -f build/web/manifest.json && echo "✓ manifest.json exists" || echo "✗ manifest.json missing"
-          echo ""
+          MISSING=0
+          for f in index.html main.dart.js flutter.js flutter_service_worker.js manifest.json; do
+            if test -f "build/web/$f"; then
+              echo "✓ $f exists"
+            else
+              echo "✗ $f MISSING"
+              MISSING=1
+            fi
+          done
+          if [ "$MISSING" -ne 0 ]; then
+            echo "Required files missing - failing build"
+            exit 1
+          fi
           echo "Build output verified"
+      
+      - name: Add .nojekyll for GitHub Pages
+        run: touch build/web/.nojekyll
       
       - name: Setup Pages
         uses: actions/configure-pages@v4

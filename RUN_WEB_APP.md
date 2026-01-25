@@ -38,43 +38,17 @@ flutter build web
 ```
 
 ### Step 2: Deploy to GitHub Pages
-1. Go to your repository: https://github.com/Mifavourite/Peaceled-pulse
-2. Go to Settings → Pages
-3. Under "Source", select "GitHub Actions"
-4. Create a workflow file (see below)
+1. Go to your repository (e.g. https://github.com/Mifavourite/Peaceled-pulse)
+2. Go to **Settings → Pages**
+3. Under **Build and deployment**, set **Source** to **GitHub Actions**
+4. Use the workflow in this repo (`.github/workflows/deploy.yml`). Ensure that workflow exists in the repo you’re deploying (e.g. copy it into Peaceled-pulse if you deploy from there)
 
-### Step 3: Create GitHub Actions Workflow
+**Important:** If you see 404s for `manifest.json`, `flutter_service_worker.js`, or `main.dart.js`, the site is not being built/deployed correctly. Fix by:
+- Setting Pages source to **GitHub Actions** (not “Deploy from a branch”).
+- Using the deploy workflow that runs `flutter build web --base-href "/Peaceled-pulse/"` and uploads the full `build/web` folder.
+- Re-running the workflow (push a commit or “Run workflow” in the Actions tab) so a fresh build is deployed.
 
-Create `.github/workflows/deploy.yml`:
-
-```yaml
-name: Deploy Flutter Web to GitHub Pages
-
-on:
-  push:
-    branches: [ main ]
-
-jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      
-      - uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.24.0'
-          
-      - run: flutter pub get
-      - run: flutter build web --base-href "/Peaceled-pulse/"
-      
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build/web
-```
-
-### Step 4: After deployment
+### Step 3: After deployment
 Your app will be available at:
 `https://mifavourite.github.io/Peaceled-pulse/`
 
