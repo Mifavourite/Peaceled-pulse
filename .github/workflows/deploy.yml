@@ -25,6 +25,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
+          version: '3.19.6'
       
       - name: Install dependencies
         run: |
@@ -49,6 +50,13 @@ jobs:
           flutter build web --base-href "/Peaceled-pulse/" --release 2>&1 | tee build.log
           echo "✅ Build completed successfully"
         continue-on-error: false
+      
+      - name: Ensure manifest.json in build
+        run: |
+          if [ ! -f build/web/manifest.json ]; then
+            cp web/manifest.json build/web/manifest.json
+            echo "Copied web/manifest.json to build/web/"
+          fi
       
       - name: Verify build output
         run: |
