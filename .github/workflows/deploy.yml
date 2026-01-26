@@ -17,6 +17,9 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      # Give Dart compiler enough memory for web build (dart2js)
+      DART_VM_OPTIONS: "--old_gen_heap_size=4096"
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -25,7 +28,6 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-          flutter-version: '3.19.6'
       
       - name: Install dependencies
         run: |
@@ -51,12 +53,10 @@ jobs:
           echo "✅ Build completed successfully"
         continue-on-error: false
       
-      - name: Ensure manifest.json in build
+      - name: Ensure manifest in build
         run: |
-          if [ ! -f build/web/manifest.json ]; then
-            cp web/manifest.json build/web/manifest.json
-            echo "Copied web/manifest.json to build/web/"
-          fi
+          cp web/manifest.json build/web/manifest.json
+          echo "Ensured manifest.json in build/web/"
       
       - name: Verify build output
         run: |
