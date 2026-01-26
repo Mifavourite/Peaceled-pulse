@@ -46,7 +46,7 @@ jobs:
         run: |
           set -o pipefail
           echo "Starting Flutter web build..."
-          flutter build web --base-href "/Peaceled-pulse/" --release --web-renderer html 2>&1 | tee build.log
+          flutter build web --base-href "/Peaceled-pulse/" --release 2>&1 | tee build.log
           echo "✅ Build completed successfully"
         continue-on-error: false
       
